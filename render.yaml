@@ -8,5 +8,11 @@ services:
     envVars:
       - key: GEMINI_API_KEY
         sync: false
+      - key: GEMINI_MODEL
+        value: gemini-2.5-flash
+      - key: DEMO_EXPLAIN_LIMIT
+        value: "20"
+      - key: PYTHON_VERSION
+        value: 3.12.3
       - key: PYTHONUNBUFFERED
         value: "1"

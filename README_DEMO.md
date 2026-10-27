@@ -10,6 +10,8 @@ A web demo to visualize the deletion audit results with optional Gemini AI expla
 4. Add environment variable `GEMINI_API_KEY` (get from [Google AI Studio](https://aistudio.google.com/apikey))
 5. Deploy
 
+Set `GEMINI_MODEL` to override the default `gemini-2.5-flash`. Explanations are cached in memory per case and limited per client IP (`DEMO_EXPLAIN_LIMIT`, default 20 per hour).
+
 ## Local Development
 
 ```bash

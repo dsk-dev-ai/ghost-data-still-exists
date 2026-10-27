@@ -11,12 +11,19 @@
     </div>
 </div>
 
-<div class="mb-4 flex justify-between items-center">
-    <h2 class="text-lg font-semibold">Cases</h2>
-    <button onclick="runSolver()" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Re-run Solver</button>
-</div>
+<form method="get" class="mb-4 flex flex-wrap gap-2 items-center">
+    <input name="q" value="{{ q }}" placeholder="Search case ID or email" class="px-3 py-2 border rounded w-64">
+    <select name="status" class="px-3 py-2 border rounded">
+        <option value="" {% if not status %}selected{% endif %}>All statuses</option>
+        <option value="INCOMPLETE" {% if status == 'INCOMPLETE' %}selected{% endif %}>INCOMPLETE</option>
+        <option value="COMPLETE" {% if status == 'COMPLETE' %}selected{% endif %}>COMPLETE</option>
+        <option value="NOT_APPLICABLE" {% if status == 'NOT_APPLICABLE' %}selected{% endif %}>NOT_APPLICABLE</option>
+    </select>
+    <button class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Filter</button>
+    {% if q or status %}<a href="/" class="px-4 py-2 text-gray-600">Clear</a>{% endif %}
+</form>
 
-<div class="bg-white shadow rounded-lg overflow-hidden">
+<div class="bg-white shadow rounded-lg overflow-x-auto">
     <table class="min-w-full divide-y divide-gray-200">
         <thead class="bg-gray-50">
             <tr>
@@ -49,26 +56,8 @@
             {% endfor %}
         </tbody>
     </table>
-    {% if rows|length > 100 %}
-    <div class="px-6 py-3 bg-gray-50 text-sm text-gray-500">Showing first 100 of {{ rows|length }} cases</div>
-    {% endif %}
+    <div class="px-6 py-3 bg-gray-50 text-sm text-gray-500">
+        {% if rows|length > 100 %}Showing first 100 of {{ rows|length }} matching cases{% else %}{{ rows|length }} matching case{{ '' if rows|length == 1 else 's' }}{% endif %}
+    </div>
 </div>
-
-<script>
-async function runSolver() {
-    const btn = event.target;
-    btn.disabled = true;
-    btn.textContent = 'Running...';
-    try {
-        const res = await fetch('/api/run-solver', {method: 'POST'});
-        const data = await res.json();
-        alert('Done: ' + data.returncode);
-        location.reload();
-    } catch(e) {
-        alert('Error: ' + e);
-        btn.disabled = false;
-        btn.textContent = 'Re-run Solver';
-    }
-}
-</script>
 {% endblock %}
