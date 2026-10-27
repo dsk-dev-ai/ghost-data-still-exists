@@ -5,6 +5,7 @@ services:
     plan: free
     buildCommand: pip install -r requirements_demo.txt
     startCommand: uvicorn demo.app:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /healthz
     envVars:
       - key: GEMINI_API_KEY
         sync: false
