@@ -4,11 +4,14 @@ A web demo to visualize the deletion audit results with optional Gemini AI expla
 
 ## Deploy to Render
 
-1. Fork/push this repo to GitHub
-2. Go to [render.com](https://render.com) and create a new Web Service from the repo
-3. Render will use `render.yaml` automatically
-4. Add environment variable `GEMINI_API_KEY` (get from [Google AI Studio](https://aistudio.google.com/apikey))
-5. Deploy
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/dsk-dev-ai/ghost-data-still-exists)
+
+1. Open the Render blueprint link above (or create a Web Service from the repo)
+2. Render reads [`render.yaml`](./render.yaml) automatically
+3. Set `GEMINI_API_KEY` when prompted (get one from [Google AI Studio](https://aistudio.google.com/apikey))
+4. Apply the blueprint
+
+Do not commit the key. Render stores it as a secret environment variable.
 
 Set `GEMINI_MODEL` to override the default `gemini-2.5-flash`. Explanations are cached in memory per case and limited per client IP (`DEMO_EXPLAIN_LIMIT`, default 20 per hour).
 

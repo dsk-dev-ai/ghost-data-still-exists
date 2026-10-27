@@ -12,8 +12,8 @@ Read [`problem_statement.md`](./problem_statement.md) for the complete challenge
 
 ## Live Demo
 
-A public demo of the audit results is available through the Render blueprint in
-[`render.yaml`](./render.yaml). It browses all 518 cases, shows findings and
+[Deploy the public demo](https://render.com/deploy?repo=https://github.com/dsk-dev-ai/ghost-data-still-exists)
+with the Render blueprint in [`render.yaml`](./render.yaml). It browses all 518 cases, shows findings and
 remediation steps, and can explain any case with Gemini when `GEMINI_API_KEY` is
 configured. See [`README_DEMO.md`](./README_DEMO.md) for local and Render setup.
 
