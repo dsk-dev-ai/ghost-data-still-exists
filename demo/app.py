@@ -9,7 +9,6 @@ from pathlib import Path
 import httpx
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import HTMLResponse, JSONResponse
-from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -18,7 +17,6 @@ OUTPUT_CSV = BASE_DIR / "output.csv"
 DEMO_DIR = Path(__file__).resolve().parent
 
 app = FastAPI(title="Ghost Data Still Exists - Demo", version="1.0.0")
-app.mount("/static", StaticFiles(directory=str(DEMO_DIR / "static")), name="static")
 templates = Jinja2Templates(directory=str(DEMO_DIR / "templates"))
 
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY")
