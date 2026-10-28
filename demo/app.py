@@ -20,7 +20,9 @@ app = FastAPI(title="Ghost Data Still Exists - Demo", version="1.0.0")
 templates = Jinja2Templates(directory=str(DEMO_DIR / "templates"))
 
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY")
-GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-2.5-flash")
+GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-3.5-flash")
+GEMINI_FALLBACK_MODEL = os.environ.get("GEMINI_FALLBACK_MODEL", "gemini-3.1-flash-lite")
+GEMINI_MODELS = list(dict.fromkeys([GEMINI_MODEL, GEMINI_FALLBACK_MODEL]))
 EXPLAIN_LIMIT = int(os.environ.get("DEMO_EXPLAIN_LIMIT", "20"))
 EXPLAIN_WINDOW = int(os.environ.get("DEMO_EXPLAIN_WINDOW_SECONDS", "3600"))
 
@@ -137,34 +139,39 @@ Result: status={row['deletion_status']}, steps={json.dumps(row['_steps'], indent
 
 Explain: why this status, key findings, risks, remediation plan, verification. Be concise and accurate.
 """
-    try:
-        async with httpx.AsyncClient(timeout=60.0) as client:
-            resp = await client.post(
-                f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent",
-                params={"key": GEMINI_API_KEY},
-                json={
-                    "contents": [{"parts": [{"text": prompt}]}],
-                    "generationConfig": {"temperature": 0.2, "maxOutputTokens": 1200},
-                },
+    last_status = 502
+    async with httpx.AsyncClient(timeout=60.0) as client:
+        for model in GEMINI_MODELS:
+            try:
+                resp = await client.post(
+                    f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent",
+                    params={"key": GEMINI_API_KEY},
+                    json={
+                        "contents": [{"parts": [{"text": prompt}]}],
+                        "generationConfig": {"temperature": 0.2, "maxOutputTokens": 1200},
+                    },
+                )
+            except httpx.HTTPError:
+                last_status = 502
+                continue
+            last_status = resp.status_code
+            if resp.status_code in {404, 429, 503}:
+                continue
+            if resp.status_code >= 400:
+                raise HTTPException(502, f"Gemini request failed ({resp.status_code})")
+            data = resp.json()
+            text = (
+                data.get("candidates", [{}])[0]
+                .get("content", {})
+                .get("parts", [{}])[0]
+                .get("text", "")
+                .strip()
             )
-        if resp.status_code >= 400:
-            raise HTTPException(502, f"Gemini request failed ({resp.status_code})")
-        data = resp.json()
-        text = (
-            data.get("candidates", [{}])[0]
-            .get("content", {})
-            .get("parts", [{}])[0]
-            .get("text", "")
-            .strip()
-        )
-        if not text:
-            raise HTTPException(502, "Gemini returned an empty explanation")
-        EXPLANATION_CACHE[case_id] = text
-        return JSONResponse({"explanation": text, "cached": False})
-    except HTTPException:
-        raise
-    except Exception:
-        raise HTTPException(502, "Gemini request failed")
+            if not text:
+                continue
+            EXPLANATION_CACHE[case_id] = text
+            return JSONResponse({"explanation": text, "cached": False, "model": model})
+    raise HTTPException(502, f"Gemini request failed ({last_status})")
 
 
 @app.get("/api/stats")

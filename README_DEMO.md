@@ -15,7 +15,7 @@ A web demo to visualize the deletion audit results with optional Gemini AI expla
 
 Do not commit the key. Render stores it as a secret environment variable.
 
-Set `GEMINI_MODEL` to override the default `gemini-2.5-flash`. Explanations are cached in memory per case and limited per client IP (`DEMO_EXPLAIN_LIMIT`, default 20 per hour).
+Set `GEMINI_MODEL` to override the default `gemini-3.5-flash`. `GEMINI_FALLBACK_MODEL` (default `gemini-3.1-flash-lite`) is tried if the primary model is unavailable. Explanations are cached in memory per case and limited per client IP (`DEMO_EXPLAIN_LIMIT`, default 20 per hour).
 
 ## Local Development
 
