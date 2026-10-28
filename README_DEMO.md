@@ -2,6 +2,8 @@
 
 A web demo to visualize the deletion audit results with optional Gemini AI explanations.
 
+**Live demo:** https://ghost-data-still-exists-demo.onrender.com
+
 ## Deploy to Render
 
 [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/dsk-dev-ai/ghost-data-still-exists)
