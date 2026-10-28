@@ -2,7 +2,7 @@
 
 A web demo to visualize the deletion audit results with optional Gemini AI explanations.
 
-**Live demo:** https://ghost-data-still-exists-demo.onrender.com
+**Live demo:** https://ghost-data-still-exists-demo.onrender.com — Gemini explanations are enabled.
 
 ## Deploy to Render
 

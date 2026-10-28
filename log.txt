@@ -555,3 +555,121 @@ branch=main
 repo_root=/home/dsk/Projects/Orchestrate
 worktree=main
 parent_agent=none
+
+## [2026-10-27T19:03:15Z] Fix root npm dev, validate demo, publish repo, prepare Render
+
+User Prompt (verbatim, secrets redacted):
+continue also fix "dsk@dsk:~/Projects$ cd erasureproof
+dsk@dsk:~/Projects/erasureproof$ npm run dev
+npm error code ENOENT
+npm error syscall open
+npm error path /home/dsk/Projects/erasureproof/package.json
+npm error errno -2
+npm error enoent Could not read package.json: Error: ENOENT: no such file or directory, open '/home/dsk/Projects/erasureproof/package.json'
+npm error enoent This is related to npm not being able to find a file.
+npm error enoent
+A complete log of this run can be found in: /home/dsk/.npm/_logs/2026-10-27T18_23_39_858Z-debug-0.log
+dsk@dsk:~/Projects/erasureproof$ "
+
+Agent Response Summary:
+Added root package.json and scripts/dev.mjs so npm run dev starts FastAPI and Vite together, with dev:api/dev:web variants; verified both 200 on ports 8000/5173 and typecheck/build pass. Hardened the demo (removed public solver execution, added Gemini rate limiting/cache/health endpoint), validated all routes with TestClient, committed and pushed the public GitHub repo dsk-dev-ai/ghost-data-still-exists, and added a Render blueprint/deploy link. Render provisioning still requires the user's Render login and GEMINI_API_KEY.
+
+Actions:
+* Added /home/dsk/Projects/erasureproof/package.json and scripts/dev.mjs
+* Updated ErasureProof README with root npm workflow
+* Updated demo/app.py, templates, render.yaml, README_DEMO.md
+* Created public repo dsk-dev-ai/ghost-data-still-exists and pushed
+* Ran npm typecheck/build, dev smoke, FastAPI TestClient route checks
+
+Context:
+tool=opencode
+model=opencode/big-pickle
+branch=main
+repo_root=/home/dsk/Projects/Orchestrate
+worktree=main
+parent_agent=none
+
+## [2026-10-28T01:44:22Z] Deploy public demo to Render free tier
+
+User Prompt (verbatim, secrets redacted):
+by thsi go render "[REDACTED]" and do also i have only free plan so use tah only free tier
+
+Agent Response Summary:
+Using the supplied Render API credential only in memory/environment, will query the Render account and deploy the public demo repository as a free-tier Python web service with the Gemini key left for the user to add securely. No secret will be written to the repo or log.
+
+Actions:
+* Preparing Render API deployment
+* Will create/verify free-tier web service from dsk-dev-ai/ghost-data-still-exists
+
+Context:
+tool=opencode
+model=opencode/big-pickle
+branch=main
+repo_root=/home/dsk/Projects/Orchestrate
+worktree=main
+parent_agent=none
+
+## [2026-10-28T01:52:06Z] Render deployment live on free tier
+
+User Prompt (verbatim, secrets redacted):
+by thsi go render "[REDACTED]" and do also i have only free plan so use tah only free tier
+
+Agent Response Summary:
+Created Render web service ghost-data-still-exists-demo with the free plan, connected to dsk-dev-ai/ghost-data-still-exists. Fixed the first deploy failure by removing an unused StaticFiles mount for an empty demo/static directory, triggered a redeploy, and verified the live service. Health returns 518 cases and stats return INCOMPLETE 461, COMPLETE 50, NOT_APPLICABLE 7. Gemini explanations remain disabled until GEMINI_API_KEY is added in Render.
+
+Actions:
+* Queried Render workspace and created free-tier Python web service
+* Fixed demo/app.py startup error and pushed commit 0555e9d
+* Redeployed and polled Render deploy status to live
+* Verified https://ghost-data-still-exists-demo.onrender.com/, /healthz, /api/stats, /case/case_33
+* Documented the live URL in README.md and README_DEMO.md
+
+Context:
+tool=opencode
+model=opencode/big-pickle
+branch=main
+repo_root=/home/dsk/Projects/Orchestrate
+worktree=main
+parent_agent=none
+
+## [2026-10-28T02:25:20Z] Enable Gemini on live Render demo and sync GitHub
+
+User Prompt (verbatim, secrets redacted):
+update these things on github and in also add this gemnin kay there "[REDACTED]"
+
+Agent Response Summary:
+Will add the supplied Gemini key to the existing Render service as a secret environment variable, verify the live explanation endpoint, and push remaining documentation/log updates to the public GitHub repository. The key will not be written to the repo, docs, or log.
+
+Actions:
+* Preparing Render env update for ghost-data-still-exists-demo
+* Preparing GitHub sync of live demo docs and transcript log
+
+Context:
+tool=opencode
+model=opencode/big-pickle
+branch=main
+repo_root=/home/dsk/Projects/Orchestrate
+worktree=main
+parent_agent=none
+
+## [2026-10-28T02:33:01Z] Gemini enabled on live demo
+
+User Prompt (verbatim, secrets redacted):
+update these things on github and in also add this gemnin kay there "[REDACTED]"
+
+Agent Response Summary:
+Added GEMINI_API_KEY to the Render service environment, switched to gemini-3.5-flash with gemini-3.1-flash-lite fallback, deployed the updated code, and verified the live /api/explain/case_33 endpoint returns a valid explanation (then serves it from cache). Updated README and README_DEMO with the live Gemini-enabled status. The key remains only in Render's secret environment and was removed from local temp files; it was never committed.
+
+Actions:
+* PUT Render env vars with GEMINI_API_KEY and model settings
+* Triggered Render deploy dep-dbglsd3vvlss73b2ck50 and verified live
+* POST /api/explain/case_33 returned 200 with model gemini-3.5-flash
+* Updated README.md and README_DEMO.md
+
+Context:
+tool=opencode
+model=opencode/big-pickle
+branch=main
+repo_root=/home/dsk/Projects/Orchestrate
+worktree=main
+parent_agent=none

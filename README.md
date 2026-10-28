@@ -12,7 +12,7 @@ Read [`problem_statement.md`](./problem_statement.md) for the complete challenge
 
 ## Live Demo
 
-**Live demo:** https://ghost-data-still-exists-demo.onrender.com
+**Live demo:** https://ghost-data-still-exists-demo.onrender.com (Gemini explanations enabled)
 
 The demo is deployed on Render's free tier from
 [`dsk-dev-ai/ghost-data-still-exists`](https://github.com/dsk-dev-ai/ghost-data-still-exists)
